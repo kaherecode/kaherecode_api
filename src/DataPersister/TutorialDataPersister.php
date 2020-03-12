@@ -2,50 +2,46 @@
 
 namespace App\DataPersister;
 
-use App\Entity\User;
+use App\Entity\Tutorial;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  *
  */
-class UserDataPersister implements ContextAwareDataPersisterInterface
+class TutorialDataPersister implements ContextAwareDataPersisterInterface
 {
     private $_entityManager;
-    private $_passwordEncoder;
+    private $_slugger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $passwordEncoder
+        SluggerInterface $slugger
     ) {
         $this->_entityManager = $entityManager;
-        $this->_passwordEncoder = $passwordEncoder;
+        $this->_slugger = $slugger;
     }
+
 
     /**
      * {@inheritdoc}
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof User;
+        return $data instanceof Tutorial;
     }
 
     /**
-     * @param User $data
+     * @param Tutorial $data
      */
     public function persist($data, array $context = [])
     {
-        if ($data->getPlainPassword()) {
-            $data->setPassword(
-                $this->_passwordEncoder->encodePassword(
-                    $data,
-                    $data->getPlainPassword()
-                )
-            );
-
-            $data->eraseCredentials();
-        }
+        $data->setSlug(
+            $this
+                ->_slugger
+                ->slug(strtolower($data->getTitle())). '-' .uniqid()
+        );
 
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
