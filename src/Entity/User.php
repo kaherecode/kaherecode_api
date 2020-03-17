@@ -12,8 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
+ *     normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}}
  * )
  *
  * @UniqueEntity(fields={"email"})
@@ -28,14 +28,14 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      *
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -45,7 +45,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="json")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $roles = [];
 
@@ -59,7 +59,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      *
      * @Assert\NotBlank()
      */
@@ -68,7 +68,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      *
      * @Assert\NotBlank()
      */
@@ -77,82 +77,82 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private $bio;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private $github;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private $twitter;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private $linkedin;
 
     /**
      * @ORM\Column(type="boolean")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $enabled;
 
     /**
      * @ORM\Column(type="boolean")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $archived;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $confirmationToken;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $passwordRequestedAt;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $registeredAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @Groups("read")
+     * @Groups("user:read")
      */
     private $lastLogin;
 
     /**
-     * @Groups("write")
+     * @Groups("user:write")
      *
      * @SerializedName("password")
      */

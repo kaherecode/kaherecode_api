@@ -9,8 +9,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}}
+ *     normalizationContext={"groups"={"tutorial:read"}},
+ *     denormalizationContext={"groups"={"tutorial:write"}}
  * )
  * @ORM\Entity(repositoryClass="App\Repository\TutorialRepository")
  */
@@ -21,14 +21,14 @@ class Tutorial
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      *
      * @Assert\NotBlank()
      */
@@ -37,91 +37,91 @@ class Tutorial
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $video;
 
     /**
      * @ORM\Column(type="integer")
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $views;
 
     /**
      * @ORM\Column(type="integer")
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $readings;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $demo;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"tutorial:read", "tutorial:write"})
      */
     private $sourceCode;
 
     /**
      * @ORM\Column(type="boolean")
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $isPublished;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $publishedAt;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      *
-     * @Groups("read")
+     * @Groups("tutorial:read")
      */
     private $updatedAt;
 
