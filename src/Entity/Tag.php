@@ -2,11 +2,22 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"tag:read"}},
+ *     denormalizationContext={"groups"={"tag:write"}}
+ * )
+ *
+ * @UniqueEntity(fields={"label"})
+ *
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  */
 class Tag
@@ -15,13 +26,31 @@ class Tag
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @Groups("tag:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups({"tag:read", "tag:write", "tutorial:read"})
      */
     private $label;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Tutorial", mappedBy="tags")
+     *
+     * @ApiSubresource
+     *
+     * @Groups("tag:read")
+     */
+    private $tutorials;
+
+    public function __construct()
+    {
+        $this->tutorials = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -41,6 +70,34 @@ class Tag
     public function setLabel(string $label): self
     {
         $this->label = strtolower($label);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tutorial[]
+     */
+    public function getTutorials(): Collection
+    {
+        return $this->tutorials;
+    }
+
+    public function addTutorial(Tutorial $tutorial): self
+    {
+        if (!$this->tutorials->contains($tutorial)) {
+            $this->tutorials[] = $tutorial;
+            $tutorial->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTutorial(Tutorial $tutorial): self
+    {
+        if ($this->tutorials->contains($tutorial)) {
+            $this->tutorials->removeElement($tutorial);
+            $tutorial->removeTag($this);
+        }
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -28,7 +30,13 @@ class Tutorial
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"tutorial:read", "tutorial:write", "user:read", "topic:read"})
+     * @Groups({
+     *     "tutorial:read",
+     *     "tutorial:write",
+     *     "user:read",
+     *     "topic:read",
+     *     "tag:read"
+     * })
      *
      * @Assert\NotBlank()
      */
@@ -140,12 +148,20 @@ class Tutorial
      */
     private $topic;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="tutorials")
+     *
+     * @Groups("tutorial:read")
+     */
+    private $tags;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->isPublished = false;
         $this->views = 0;
         $this->readings = 0;
+        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -341,6 +357,32 @@ class Tutorial
     public function setTopic(?Topic $topic): self
     {
         $this->topic = $topic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tag[]
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+        }
 
         return $this;
     }
