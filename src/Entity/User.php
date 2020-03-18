@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -59,7 +62,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "tutorial:read"})
      *
      * @Assert\NotBlank()
      */
@@ -68,7 +71,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      *
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"user:read", "user:write", "tutorial:read"})
      *
      * @Assert\NotBlank()
      */
@@ -158,11 +161,21 @@ class User implements UserInterface
      */
     private $plainPassword;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tutorial", mappedBy="author")
+     *
+     * @ApiSubresource
+     *
+     * @Groups("user:read")
+     */
+    private $tutorials;
+
     public function __construct()
     {
         $this->enabled = false;
         $this->archived = false;
         $this->registeredAt = new \DateTime();
+        $this->tutorials = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -363,8 +376,9 @@ class User implements UserInterface
         return $this->passwordRequestedAt;
     }
 
-    public function setPasswordRequestedAt(?\DateTimeInterface $passwordRequestedAt): self
-    {
+    public function setPasswordRequestedAt(
+        ?\DateTimeInterface $passwordRequestedAt
+    ): self {
         $this->passwordRequestedAt = $passwordRequestedAt;
 
         return $this;
@@ -402,6 +416,37 @@ class User implements UserInterface
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tutorial[]
+     */
+    public function getTutorials(): Collection
+    {
+        return $this->tutorials;
+    }
+
+    public function addTutorial(Tutorial $tutorial): self
+    {
+        if (!$this->tutorials->contains($tutorial)) {
+            $this->tutorials[] = $tutorial;
+            $tutorial->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTutorial(Tutorial $tutorial): self
+    {
+        if ($this->tutorials->contains($tutorial)) {
+            $this->tutorials->removeElement($tutorial);
+            // set the owning side to null (unless already changed)
+            if ($tutorial->getAuthor() === $this) {
+                $tutorial->setAuthor(null);
+            }
+        }
 
         return $this;
     }

@@ -28,7 +28,7 @@ class Tutorial
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"tutorial:read", "tutorial:write"})
+     * @Groups({"tutorial:read", "tutorial:write", "user:read"})
      *
      * @Assert\NotBlank()
      */
@@ -124,6 +124,14 @@ class Tutorial
      * @Groups("tutorial:read")
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tutorials")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups("tutorial:read")
+     */
+    private $author;
 
     public function __construct()
     {
@@ -302,6 +310,18 @@ class Tutorial
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
