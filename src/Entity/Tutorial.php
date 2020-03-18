@@ -28,7 +28,7 @@ class Tutorial
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups({"tutorial:read", "tutorial:write", "user:read"})
+     * @Groups({"tutorial:read", "tutorial:write", "user:read", "topic:read"})
      *
      * @Assert\NotBlank()
      */
@@ -132,6 +132,13 @@ class Tutorial
      * @Groups("tutorial:read")
      */
     private $author;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Topic", inversedBy="tutorials")
+     *
+     * @Groups({"tutorial:read", "tutorial:write"})
+     */
+    private $topic;
 
     public function __construct()
     {
@@ -322,6 +329,18 @@ class Tutorial
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getTopic(): ?Topic
+    {
+        return $this->topic;
+    }
+
+    public function setTopic(?Topic $topic): self
+    {
+        $this->topic = $topic;
 
         return $this;
     }
