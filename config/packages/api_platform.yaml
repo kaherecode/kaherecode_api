@@ -13,3 +13,12 @@ api_platform:
     description: 'An aspiring community for developers. A place to learn and share about programming.'
     version: '1.0.0'
     show_webby: false
+    path_segment_name_generator: api_platform.path_segment_name_generator.dash
+
+    exception_to_status:
+        Symfony\Component\Serializer\Exception\ExceptionInterface: 400 # Use a raw status code (recommended)
+        ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+        ApiPlatform\Core\Exception\FilterValidationException: 400
+        Doctrine\ORM\OptimisticLockException: 409
+
+        App\Exception\NotFoundException: 404
