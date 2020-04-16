@@ -41,7 +41,9 @@ class ResetPasswordHandler implements MessageHandlerInterface
 
     public function __invoke(ResetPassword $resetPassword)
     {
-        if ($resetPassword->getConfirmationToken() === '' || $resetPassword->getPlainPassword() === '') {
+        if ($resetPassword->getConfirmationToken() === ''
+            || $resetPassword->getPlainPassword() === ''
+        ) {
             throw new \Exception("Values can not be empty.");
         }
 

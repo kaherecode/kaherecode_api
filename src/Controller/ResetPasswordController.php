@@ -23,6 +23,7 @@ class ResetPasswordController
     public function __invoke(ResetPassword $data)
     {
         $this->_resetPasswordHandler->__invoke($data);
+        $data->setPlainPassword(null);
 
         return $data;
     }
