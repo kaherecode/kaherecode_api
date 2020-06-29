@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Controller\ResetPasswordController;
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -24,15 +23,11 @@ class ResetPassword
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
     private $confirmationToken;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
     private $plainPassword;
 

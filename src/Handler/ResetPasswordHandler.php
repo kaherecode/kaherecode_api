@@ -53,18 +53,18 @@ class ResetPasswordHandler implements MessageHandlerInterface
                 ['confirmationToken' => $resetPassword->getConfirmationToken()]
             );
 
-        if (null === $user) {
+        if ($user !== null) {
+            $user->setPassword(
+                $this
+                    ->_passwordEncoder
+                    ->encodePassword($user, $resetPassword->getPlainPassword())
+            );
+            $user->setConfirmationToken(null);
+            $user->setPasswordRequestedAt(null);
+
+            $this->_entityManager->flush();
+        } else {
             throw new NotFoundException("No password reset has been requested.");
         }
-
-        $user->setPassword(
-            $this
-                ->_passwordEncoder
-                ->encodePassword($user, $resetPassword->getPlainPassword())
-        );
-        $user->setConfirmationToken(null);
-        $user->setPasswordRequestedAt(null);
-
-        $this->_entityManager->flush();
     }
 }

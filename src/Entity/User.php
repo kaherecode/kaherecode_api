@@ -66,7 +66,7 @@ class User implements UserInterface
      *
      * @Assert\NotBlank()
      */
-    private $name;
+    private $fullName;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -202,7 +202,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return $this->username;
     }
 
     /**
@@ -256,14 +256,14 @@ class User implements UserInterface
         $this->plainPassword = null;
     }
 
-    public function getName(): ?string
+    public function getFullName(): ?string
     {
-        return $this->name;
+        return $this->fullName;
     }
 
-    public function setName(string $name): self
+    public function setFullName(string $fullName): self
     {
-        $this->name = $name;
+        $this->fullName = $fullName;
 
         return $this;
     }
