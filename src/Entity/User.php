@@ -65,6 +65,10 @@ class User implements UserInterface
      * @Groups({"user:read", "user:write", "tutorial:read"})
      *
      * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^[a-zA-Z]/",
+     *     message="Name is not valid. Should start with a letter."
+     * )
      */
     private $fullName;
 
@@ -74,6 +78,10 @@ class User implements UserInterface
      * @Groups({"user:read", "user:write", "tutorial:read"})
      *
      * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^\S*$/",
+     *     message="Username is not valid. Should not contain spaces."
+     * )
      */
     private $username;
 
@@ -158,6 +166,12 @@ class User implements UserInterface
      * @Groups("user:write")
      *
      * @SerializedName("password")
+     *
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/",
+     *     message="Password is not valid."
+     * )
      */
     private $plainPassword;
 
@@ -270,7 +284,7 @@ class User implements UserInterface
 
     public function setUsername(string $username): self
     {
-        $this->username = $username;
+        $this->username = strtolower($username);
 
         return $this;
     }
