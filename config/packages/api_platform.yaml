@@ -22,3 +22,4 @@ api_platform:
         Doctrine\ORM\OptimisticLockException: 409
 
         App\Exception\NotFoundException: 404
+        App\Exception\UserException: 400
