@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use App\Entity\User;
 use App\Exception\UserException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Core\EventListener\EventPriorities;
@@ -56,8 +57,12 @@ final class UserManager implements EventSubscriberInterface
         ViewEvent $event
     ): void {
         $user = $event->getControllerResult();
+        $method = $event->getRequest()->getMethod();
 
-        if (!$user instanceof User || $event->getRequest()->isMethodSafe(false)) {
+        if (!$user instanceof User
+            || $event->getRequest()->isMethodSafe(false)
+            || Request::METHOD_POST !== $method
+        ) {
             return;
         }
 
