@@ -184,6 +184,13 @@ class User implements UserInterface
      */
     private $tutorials;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @Groups({"user:read", "user:write"})
+     */
+    private $website;
+
     public function __construct()
     {
         $this->enabled = false;
@@ -461,6 +468,18 @@ class User implements UserInterface
                 $tutorial->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): self
+    {
+        $this->website = $website;
 
         return $this;
     }
